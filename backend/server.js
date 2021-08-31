@@ -27,6 +27,13 @@ app.use('/api/users', userRoutes)
 
 app.use(errorHandler)
 
+//should be the last middleware
+// "app.router" positions our routes
+// above the middleware defined below,
+// this means that Express will attempt
+// to match & call routes _before_ continuing
+// on, at which point we assume it's a 404 because
+// no route has handled the request.
 app.use(notFound)
 
 

@@ -10,6 +10,9 @@ import {
 } from 'react-router-dom';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 
 
@@ -21,7 +24,10 @@ const App =()=> {
         <Container>
           <Route exact path='/' component={HomeScreen} />
           <Route exact path='/product/:id' component={ProductScreen} />
-          <Route  path='/cart/:id?' component={CartScreen}/>
+          <Route path='/cart/:id?' component={CartScreen} />
+          <Route path='/login' component={LoginScreen} />
+          <Route path='/register' component={RegisterScreen} />
+          <Route path='/profile' component={ProfileScreen}/>
         </Container>
       </main>
       <Footer />
