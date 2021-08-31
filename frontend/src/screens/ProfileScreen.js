@@ -43,7 +43,7 @@ const ProfileScreen = ({history}) => {
                 })
         }
         }
-    }, [dispatch, history, userInfo, user, success])
+    }, [dispatch, history, user])
     
     const changeHandler = (e) => {
         setDetails({
@@ -63,6 +63,7 @@ const ProfileScreen = ({history}) => {
                 email:details.email,
                 password:details.password,
             }))
+             setDetails({...details,message:''})
         }
     }
         
@@ -75,7 +76,7 @@ const ProfileScreen = ({history}) => {
             {error
                     && <Message variant='danger'>{error}</Message>}
             {success
-                    && <Message variant='success'>{success}</Message>}
+                    && <Message variant='success'>Profile Updated!</Message>}
             {details.message
                     && <Message variant='danger'>{details.message}</Message>}
             
