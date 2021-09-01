@@ -11,7 +11,6 @@ import {
     USER_REGISTER_SUCCESS,
     USER_UPDATE_PROFILE_FAIL,
     USER_UPDATE_PROFILE_REQUEST,
-    USER_UPDATE_PROFILE_RESET,
     USER_UPDATE_PROFILE_SUCCESS
 } from '../constants/userConsts'
 import axios from 'axios'
@@ -126,7 +125,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message
-    if (message === 'Not authorized, token failed') {
+    if (message === 'Not authorized!,token is not valid!') {
       dispatch(logout())
     }
     dispatch({
@@ -169,7 +168,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message
-    if (message === 'Not authorized, token failed') {
+    if (message === 'Not authorized!,token is not valid!') {
       dispatch(logout())
     }
     dispatch({
