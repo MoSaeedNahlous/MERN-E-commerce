@@ -35,27 +35,37 @@ const PaymentScreen = ({ history }) => {
                         Select Method
                     </Form.Label>
                 
-                <Col>
-                    <Form.Check
-                        type='radio'
-                        label='PayPal or Credit Card'
-                        id='PayPal'
-                        name='paymentMethod'
-                        value='PayPal'
-                        checked
-                        onChange={(e)=>{setPaymentMethod(e.target.value)}}
-                    >
-                    </Form.Check>
-                    <Form.Check
-                        type='radio'
-                        label='Stripe(NOT WORKING JUST PLACEHOLDER)'
-                        id='Stripe'
-                        name='paymentMethod'
-                        value='Stripe'
-                        onChange={(e)=>{setPaymentMethod(e.target.value)}}
-                    >
+                    <Col>
+                        <Form.Check
+                            type='radio'
+                            label='PayPal'
+                            id='PayPal'
+                            name='paymentMethod'
+                            value='PayPal'
+                            disabled
+                            onChange={(e)=>{setPaymentMethod(e.target.value)}}
+                        >
                         </Form.Check>
-                    
+                        <Form.Check
+                            type='radio'
+                            label='Stripe'
+                            id='Stripe'
+                            name='paymentMethod'
+                            value='Stripe'
+                            disabled
+                            onChange={(e)=>{setPaymentMethod(e.target.value)}}
+                        >
+                        </Form.Check>
+                        <Form.Check
+                            type='radio'
+                            label='My Balance'
+                            id='Stripe'
+                            name='paymentMethod'
+                            value='MyBalance'
+                            checked
+                            onChange={(e)=>{setPaymentMethod(e.target.value)}}
+                        >
+                        </Form.Check>
                     </Col>
                 </Form.Group>
                 <br />

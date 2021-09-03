@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addToCart,removeFromCart } from '../actions/cartActions'
 import Message from '../components/Message'
+import { ORDER_RESET } from '../constants/orderConsts'
 
 
 const CartScreen = ({ match, location, history }) => {
@@ -18,11 +19,18 @@ const CartScreen = ({ match, location, history }) => {
 
     const { cartItems } = cart
 
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
     useEffect(() => {
+        if (!userInfo) {
+            history.push('/login')
+        }
+
         if (productId) {
             dispatch(addToCart(productId,qty))
         }
-    }, [dispatch, qty, productId])
+    }, [dispatch, qty, productId,history,userInfo])
     
     const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id))
@@ -30,6 +38,7 @@ const CartScreen = ({ match, location, history }) => {
 
     const checkoutHandler = () => {
         history.push('/login?redirect=shipping')
+        dispatch({type:ORDER_RESET})
     }
 
     return (

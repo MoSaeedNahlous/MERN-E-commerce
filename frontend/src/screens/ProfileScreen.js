@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDetails } from '../actions/userActions'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { updateUserProfile } from '../actions/userActions'
+import { getMyOrdersList } from '../actions/orderActions'
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConsts'
 
 const ProfileScreen = ({history}) => {
 
@@ -27,23 +29,44 @@ const ProfileScreen = ({history}) => {
     const userUpdateProfile = useSelector((state) => state.userUpdateProfile)
     const { success } = userUpdateProfile
 
+    const myOrders = useSelector((state) => state.myOrders)
+    const { loading: loadingOrders, error: errorOrders, orders } = myOrders
+    
     useEffect(() => {
-        if (!userInfo) {
-            history.push('/login')
-        } else {
-            if (!user || !user.name || success) {
-
-            dispatch(getUserDetails('profile'))
-
-        } else {
-                setDetails({
+    if (!userInfo) {
+      history.push('/login')
+    } else {
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET })
+        dispatch(getUserDetails('profile'))
+        dispatch(getMyOrdersList())
+      } else {
+        setDetails({
                     ...details,
                     name: user.name,
                     email:user.email
                 })
-        }
-        }
-    }, [dispatch, history, user])
+      }
+    }
+  }, [dispatch, history, userInfo, user, success])
+
+    // useEffect(() => {
+        
+    //     if (!userInfo) {
+    //         history.push('/login')
+    //     } else {
+    //         if (!user || !user.name || success) {
+    //         dispatch(getUserDetails('profile'))
+    //         dispatch(getMyOrdersList())
+    //     } else {
+    //             setDetails({
+    //                 ...details,
+    //                 name: user.name,
+    //                 email:user.email
+    //             })
+    //     }
+    //     }
+    // }, [dispatch, history, user])
     
     const changeHandler = (e) => {
         setDetails({
@@ -148,6 +171,64 @@ const ProfileScreen = ({history}) => {
             </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
+                    {loadingOrders ?
+                        <Loader /> :
+                        errorOrders ?
+                        <Message variant='danger'>{errorOrders}</Message> :
+                        <Table striped bordered hover responsive className='table-sm'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>DATE</th>
+                                    <th>TOTAL</th>
+                                    <th>PAID</th>
+                                    <th>DELIVERED</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    orders.map((order) => (
+                                        <tr key={order._id}>
+                                            <td>{order._id}</td>
+                                            <td>{order.createdAt.substring(0,10)}</td>
+                                            <td>{order.totalPrice}</td>
+                                            <td>
+                                                {
+                                                    order.isPaid
+                                                        ?order.paidAt.substring(0, 10)
+                                                        :<i
+                                                            className="fas fa-times"
+                                                            style={{color:'red'}}
+                                                        ></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                {
+                                                    order.isDelivered
+                                                        ?order.deliveredAt.substring(0, 10)
+                                                        :<i
+                                                            className="fas fa-times"
+                                                            style={{color:'red'}}
+                                                        ></i>
+                                                }
+                                            </td>
+                                            <td>
+                                                <Button
+                                                    className='btn-sm'
+                                                    onClick={() => {
+                                                        history.push(`/order/${order._id}`)
+                                                    }}
+                                                >
+                                                    Details
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                    </Table>
+                    }
             </Col>
         </Row>
     )

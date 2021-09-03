@@ -42,6 +42,10 @@ const Header = () => {
                                                 Profile
                                             </NavDropdown.Item>
                                         </LinkContainer>
+                                            <NavDropdown.Item>
+                                               Your Balance : ${userInfo.balance}
+                                            </NavDropdown.Item>
+                                        
                                             <NavDropdown.Item onClick={logoutHandler}>
                                                 Logout
                                             </NavDropdown.Item>
@@ -56,7 +60,41 @@ const Header = () => {
                                 </Nav.Link>
                                     </LinkContainer>
                                     
-                                }
+                            }
+                            {
+                                userInfo && userInfo.isDeputy &&
+                                (
+                                    <NavDropdown title='Deputy' id='deputyMenu'>
+                                        <LinkContainer to='/deputy/addbalance'>
+                                            <NavDropdown.Item>
+                                                Add Balance
+                                            </NavDropdown.Item>
+                                        </LinkContainer>                                     
+                                    </NavDropdown>
+                                )
+                            }
+                            {
+                                userInfo && userInfo.isAdmin &&
+                                (
+                                    <NavDropdown title='Admin' id='adminMenu'>
+                                        <LinkContainer to='/admin/users'>
+                                            <NavDropdown.Item>
+                                                Users
+                                            </NavDropdown.Item>
+                                        </LinkContainer>
+                                        <LinkContainer to='/admin/products'>
+                                            <NavDropdown.Item>
+                                                Products
+                                            </NavDropdown.Item>
+                                        </LinkContainer>
+                                         <LinkContainer to='/admin/orders'>
+                                            <NavDropdown.Item>
+                                                Orders
+                                            </NavDropdown.Item>
+                                        </LinkContainer>                                        
+                                    </NavDropdown>
+                                )
+                            }
                                 
                     </Nav>
                     </Navbar.Collapse>

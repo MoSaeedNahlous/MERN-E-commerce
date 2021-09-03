@@ -20,6 +20,16 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    isDeputy: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    balance: {
+        type: Number,
+        required:true,
+        default : 0
     }
 
 

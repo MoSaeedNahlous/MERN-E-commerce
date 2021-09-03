@@ -19,7 +19,9 @@ const authUser = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            balance: user.balance,
             isAdmin: user.isAdmin,
+            isDeputy: user.isDeputy,
             token: generateToken(user._id)
         })
     } else {
@@ -57,7 +59,9 @@ const registerUser = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            balance: user.balance,
             isAdmin: user.isAdmin,
+            isDeputy: user.isDeputy,
             token: generateToken(user._id)
         })
     } else {
@@ -78,7 +82,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
+            balance: user.balance,
             isAdmin: user.isAdmin,
+            isDeputy: user.isDeputy,
         })
         
     } else {
@@ -111,7 +117,9 @@ const updateUserProfile = asyncHandler(async (req, res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
+            balance: updatedUser.balance,
             isAdmin: updatedUser.isAdmin,
+            isDeputy: updatedUser.isDeputy,
             token: generateToken(updatedUser._id)
         })
     } else {
@@ -120,11 +128,21 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc   Get all users
+// @route  GET /api/users
+// @access Private/Admin
+
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({})
+    res.json(users)
+})
+
 
 
 export {
     authUser,
     registerUser,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    getUsers
 }
