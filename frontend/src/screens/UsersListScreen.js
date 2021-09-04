@@ -1,27 +1,44 @@
 import React, { useEffect } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUsers } from '../actions/userActions'
+import { deleteUserById, getUsers } from '../actions/userActions'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { LinkContainer } from 'react-router-bootstrap'
 
-const UsersListScreen = () => {
+const UsersListScreen = ({history}) => {
 
     const dispatch = useDispatch()
 
     const usersList = useSelector(state => state.usersList)
     const { users, error, loading } = usersList
-    
+
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
+    const deleteUser = useSelector(state => state.deleteUser)
+    const { success,loading:deleteLoading,error:deleteError } = deleteUser
+
+
     useEffect(() => {
+        if (!userInfo) {
+             history.push('/login')
+        }
+    }, [history,userInfo])
 
-        dispatch(getUsers())
-        
-    }, [dispatch])
+    useEffect(() => {
+        if (userInfo && userInfo.isAdmin) {
+           dispatch(getUsers()) 
+        } else {
+            history.push('/login')
+        } 
+    }, [dispatch, history , success])
 
-    const deleteHandler = () => {
-        
-    }
+
+
+    
+
+
 
     return (
         <>
@@ -84,7 +101,7 @@ const UsersListScreen = () => {
                                             </td>
                                              <td>${user.balance}</td>
                                             <td>
-                                                <LinkContainer to={`/users/${user._id}/edit`}>
+                                                <LinkContainer to={`/admin/user/${user._id}/edit`}>
                                                 <Button
                                                     variant='light'
                                                     className='btn-sm'
@@ -95,7 +112,7 @@ const UsersListScreen = () => {
                                                     <Button
                                                     variant='danger'
                                                     className='btn-sm'
-                                                    onClick={deleteHandler(user._id)}
+                                                    onClick={()=>dispatch(deleteUserById(user._id))}
                                                 >
                                                     <i className="fas fa-trash"></i>
                                                     </Button>

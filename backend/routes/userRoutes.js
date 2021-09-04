@@ -4,7 +4,10 @@ import {
     registerUser,
     getUserProfile,
     updateUserProfile,
-    getUsers
+    getUsers,
+    deleteUserById,
+    updateUser,
+    getUserById
 } from '../controllers/userController.js'
 
 import {
@@ -22,7 +25,12 @@ router.route('/profile')
 
 router.route('/')
     .post(registerUser)
-    .get(protect,admin,getUsers)
+    .get(protect, admin, getUsers)
+
+router.route('/:id')
+    .get(protect, admin,getUserById)
+    .delete(protect, admin, deleteUserById)
+    .put(protect,admin,updateUser)
 
 
 
