@@ -5,10 +5,9 @@ import colors from 'colors'
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
-
-
-
+import path from 'path'
 
 
 dotenv.config({ path: '../.env' })
@@ -28,7 +27,15 @@ app.use('/api/products' , productRoutes)
 
 app.use('/api/users' , userRoutes)
 
-app.use('/api/orders' , orderRoutes)
+app.use('/api/orders', orderRoutes)
+
+app.use('/api/upload', uploadRoutes)
+
+//making uploads folder static
+const __dirname = path.resolve()
+app.use(express.static(__dirname))
+app.use('../uploads', express.static(path.join(__dirname,'uploads')))
+
 
 app.use(errorHandler)
 
@@ -42,13 +49,9 @@ app.use(errorHandler)
 app.use(notFound)
 
 
-
-
-
 app.get('/', (req,res) => {
     res.send('API is running...')
 })
-
 
 
 const PORT = process.env.PORT || 5000
