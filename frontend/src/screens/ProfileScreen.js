@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row, Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,24 +51,6 @@ const ProfileScreen = ({history}) => {
     }
   }, [dispatch, history, userInfo, user, success])
 
-    // useEffect(() => {
-        
-    //     if (!userInfo) {
-    //         history.push('/login')
-    //     } else {
-    //         if (!user || !user.name || success) {
-    //         dispatch(getUserDetails('profile'))
-    //         dispatch(getMyOrdersList())
-    //     } else {
-    //             setDetails({
-    //                 ...details,
-    //                 name: user.name,
-    //                 email:user.email
-    //             })
-    //     }
-    //     }
-    // }, [dispatch, history, user])
-    
     const changeHandler = (e) => {
         setDetails({
             ...details,

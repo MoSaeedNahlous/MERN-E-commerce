@@ -7,12 +7,17 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
-  ORDER_PAY_RESET,
   ORDER_PAY_SUCCESS,
   ORDER_RESET,
   MY_ORDERS_LIST_FAIL,
   MY_ORDERS_LIST_REQUEST,
-  MY_ORDERS_LIST_SUCCESS
+  MY_ORDERS_LIST_SUCCESS,
+  ORDERS_LIST_REQUEST,
+  ORDERS_LIST_SUCCESS,
+  ORDERS_LIST_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_FAIL
 } from '../constants/orderConsts'
 import {
   CART_RESET
@@ -191,6 +196,90 @@ export const getMyOrdersList = () => async (dispatch, getState) => {
     }
     dispatch({
       type: MY_ORDERS_LIST_FAIL,
+      payload: message,
+    })
+  }
+}
+export const getAllOrdersList = () => async (dispatch, getState) => {
+  try {
+
+    dispatch({
+      type: ORDERS_LIST_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+      const { data } = await axios.get(
+          `/api/orders`,
+          config
+      )
+
+    dispatch({
+      type: ORDERS_LIST_SUCCESS,
+      payload: data,
+    })
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized!,token is not valid!') {
+      dispatch(logout())
+    }
+    dispatch({
+      type: ORDERS_LIST_FAIL,
+      payload: message,
+    })
+  }
+}
+
+export const deliverOrder = (orderId) => async (dispatch, getState) => {
+
+  try {
+    dispatch({
+      type: ORDER_DELIVER_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/deliver`,
+      {},
+      config
+    )
+
+    dispatch({
+      type: ORDER_DELIVER_SUCCESS,
+      payload: data,
+    })
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized!,token is not valid!') {
+      dispatch(logout())
+    }
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
       payload: message,
     })
   }

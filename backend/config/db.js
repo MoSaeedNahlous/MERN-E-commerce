@@ -2,9 +2,12 @@ import mongoose from 'mongoose';
 import colors from 'colors'
 
 
-const connectDB = async () => {
+
+const connectDB = async (URI) => {
+
+
     try {
-        const connection = await mongoose.connect(process.env.MONGO_URI, {
+        const connection = await mongoose.connect(URI, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
             useCreateIndex:true

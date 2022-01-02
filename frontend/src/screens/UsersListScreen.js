@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +18,7 @@ const UsersListScreen = ({history}) => {
     const { userInfo } = userLogin
 
     const deleteUser = useSelector(state => state.deleteUser)
-    const { success,loading:deleteLoading,error:deleteError } = deleteUser
+    const { success } = deleteUser
 
 
     useEffect(() => {

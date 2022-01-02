@@ -1,12 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { getOrderDetails, payOrder , deliverOrder } from '../actions/orderActions'
 import { getUserDetails } from '../actions/userActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { ORDER_PAY_RESET } from '../constants/orderConsts'
+import { ORDER_PAY_RESET,ORDER_DELIVER_RESET } from '../constants/orderConsts'
 
 const OrderScreen = ({ match,history }) => {
     
@@ -18,13 +19,14 @@ const OrderScreen = ({ match,history }) => {
     const { order, loading, error } = orderDetails
 
     const orderPay = useSelector(state => state.orderPay)
-    const { success: successPay, loading: loadingPay } = orderPay
+    const { success: successPay } = orderPay
+
+    const orderDeliver = useSelector(state => state.orderDeliver)
+    const { success: successDeliver, loading: loadingDeliver } = orderDeliver
     
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
-    const userDetails = useSelector(state => state.userDetails)
-    const {  } = userDetails
     
     useEffect(() => {
         if (!userInfo) {
@@ -32,15 +34,20 @@ const OrderScreen = ({ match,history }) => {
         }
         dispatch(getOrderDetails(orderId))
         //if we paid Successfully or not paid then re render
-        if (!order || successPay) {
+        if (!order || successPay || successDeliver) {
             dispatch({type:ORDER_PAY_RESET})
-              
+            dispatch({type:ORDER_DELIVER_RESET})
         }
         
-    }, [successPay, orderId, dispatch,userInfo])
+    }, [successPay, successDeliver, orderId, dispatch, userInfo])
     
     const paymentHandler = () => {
         dispatch(payOrder(orderId))
+        dispatch(getUserDetails('profile'))
+    }
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(orderId))
         dispatch(getUserDetails('profile'))
     }
 
@@ -49,9 +56,6 @@ const OrderScreen = ({ match,history }) => {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
     }
     
-
-
-
     return loading ?
         <Loader /> :
         error ?
@@ -169,7 +173,21 @@ const OrderScreen = ({ match,history }) => {
                             >
                               Pay Order      
                             </Button>
-                        </ListGroup.Item> }
+                                </ListGroup.Item>}
+                            
+                            {loadingDeliver && <Loader />}
+                            
+                             {order.isPaid && !order.isDelivered && userInfo && userInfo.isAdmin &&
+                                <ListGroup.Item>
+                                
+                            <Button
+                                className='btn-with-full-width'
+                                onClick={deliverHandler}
+                            >
+                              Deliver Order      
+                            </Button>
+                                </ListGroup.Item>}
+                            
                         
                         
                         

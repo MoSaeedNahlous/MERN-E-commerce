@@ -6,13 +6,16 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { LinkContainer } from 'react-router-bootstrap'
 import { PRODUCT_CREATE_RESET } from '../constants/productConsts'
+import Paginate from '../components/Paginate'
 
-const ProductsListScreen = ({history,match}) => {
+const ProductsListScreen = ({ history, match }) => {
+    
+    const pageNumber = match.params.pageNumber || 1
 
     const dispatch = useDispatch()
 
     const productList = useSelector(state => state.productList)
-    const { products, error, loading } = productList
+    const { products, error, loading,pages,page } = productList
 
     const deleteProductSt = useSelector(state => state.deleteProduct)
     const { success, error: deleteError, loading: deleteLoading } = deleteProductSt
@@ -33,9 +36,9 @@ const ProductsListScreen = ({history,match}) => {
         if (createSuccess) {
             history.push(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts())
+            dispatch(listProducts('',pageNumber))
         }
-    }, [dispatch, history, userInfo, success, createSuccess ,createdProduct])
+    }, [dispatch, history, userInfo, success, createSuccess ,createdProduct,pageNumber])
 
 
     const createProductHandler = () => {
@@ -68,6 +71,7 @@ const ProductsListScreen = ({history,match}) => {
                     error ?
                         <Message variant='danger'>{error}</Message> :
                         (
+                            <>
                             <Table
                                 striped
                                 bordered
@@ -115,7 +119,9 @@ const ProductsListScreen = ({history,match}) => {
                                     ))
                                 }
                             </tbody>
-                    </Table>
+                                </Table>
+                                <Paginate page={page} pages={pages} isAdmin={true} />
+                                </>
                         )
                     }
         </>

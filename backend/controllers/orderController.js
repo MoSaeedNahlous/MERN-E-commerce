@@ -61,11 +61,10 @@ const getOrderById = asyncHandler(async (req, res) => {
 
 
 // @desc   Update order to Paid
-// @route  GET /api/orders/:id/pay
+// @route  PUT /api/orders/:id/pay
 // @access Private
 
 const UpdateOrderToPaid = asyncHandler(async (req, res) => {
-    //orderId , userinfo_id
     const order = await Order.findById(req.params.id)
     const user = await User.findById(req.body.userId)
     if (order && user) {
@@ -83,10 +82,6 @@ const UpdateOrderToPaid = asyncHandler(async (req, res) => {
             return
         }
         
-
-        
-
-        
     } else {
         res.status(404)
         throw new Error("Order not found!")
@@ -99,8 +94,6 @@ const UpdateOrderToPaid = asyncHandler(async (req, res) => {
 // @access Private
 
 const getMyOrders = asyncHandler(async (req, res) => {
-
-
     const orders = await Order.find({user:req.user._id})
     
     if (orders) {
@@ -112,8 +105,37 @@ const getMyOrders = asyncHandler(async (req, res) => {
     
 })
 
+// @desc   Get all orders
+// @route  GET /api/orders
+// @access Private/Admin
+
+const getAllOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate('user','id name')
+    res.json(orders)
+})
+
+// @desc   Update order to Delivered
+// @route  PUT /api/orders/:id/deliver
+// @access Private/Admin
+
+const UpdateOrderToDelivered = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id)
+    if (order) {
+        if (order.isPaid) {
+            order.isDelivered = true
+            order.deliveredAt = Date.now()
+            const updatedOrder = await order.save()
+            res.json(updatedOrder)
+         } else {
+            res.json('Order not Paid!').status(400)
+            return
+        }    
+    } else {
+        res.status(404)
+        throw new Error("Order not found!")
+    }
+    
+})
 
 
-
-
-export{addOrderItems,getOrderById,UpdateOrderToPaid,getMyOrders}
+export{addOrderItems,getOrderById,UpdateOrderToPaid,getMyOrders,getAllOrders,UpdateOrderToDelivered}

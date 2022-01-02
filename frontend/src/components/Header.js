@@ -8,6 +8,8 @@ import {
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../actions/userActions';
+import { Route } from 'react-router';
+import SearchBox from './SearchBox';
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -19,15 +21,17 @@ const Header = () => {
         dispatch(logout())
     }
     return (
+        //TODO:update info in navbar
         <header>
             <Navbar bg="dark" variant='dark' expand="lg" collapseOnSelect>
-                <Container>
+                <Container className="px-0">
                     <LinkContainer to='/'>
                         <Navbar.Brand >MERN E-Commerce</Navbar.Brand>
                     </LinkContainer>
                     
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
+                        <Route render={({ history }) => <SearchBox history={history} />} />
                         <Nav className="ms-auto">
                             <LinkContainer to='/cart'>
                                 <Nav.Link>
